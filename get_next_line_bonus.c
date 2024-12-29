@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: keyn <keyn@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 15:00:37 by arocca            #+#    #+#             */
-/*   Updated: 2024/12/09 17:34:49 by arocca           ###   ########.fr       */
+/*   Updated: 2024/12/17 11:55:14 by keyn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ char	*update_buffer(int fd, char buffer[], char **node_buffer)
 	int		bytes_read;
 	char	*temp;
 
-	while (!ft_strchr(*node_buffer, '\n'))
+	bytes_read = 1;
+	while (bytes_read && !ft_strchr(*node_buffer, '\n'))
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read == -1)
@@ -75,8 +76,6 @@ char	*update_buffer(int fd, char buffer[], char **node_buffer)
 			*node_buffer = NULL;
 			return (NULL);
 		}
-		if (bytes_read == 0)
-			break ;
 		buffer[bytes_read] = '\0';
 		temp = *node_buffer;
 		*node_buffer = ft_strjoin(*node_buffer, buffer);

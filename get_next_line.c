@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: keyn <keyn@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:58:14 by arocca            #+#    #+#             */
-/*   Updated: 2024/12/10 15:41:34 by arocca           ###   ########.fr       */
+/*   Updated: 2024/12/29 13:46:31 by keyn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,21 +71,17 @@ char	*extract_newline(char **newline)
 	if (!*newline || !**newline)
 		return (clean_line(newline));
 	endline_pos = ft_strchr(*newline, '\n');
-	if (endline_pos || **newline)
+	if (endline_pos)
 	{
-		if (endline_pos)
-		{
-			line = ft_substr(*newline, 0, (endline_pos - *newline) + 1);
-			temp = ft_strdup(endline_pos + 1);
-		}
-		else
-		{
-			line = ft_strdup(*newline);
-			temp = NULL;
-		}
-		return (check_line(&line, &temp, newline));
+		line = ft_substr(*newline, 0, (endline_pos - *newline) + 1);
+		temp = ft_strdup(endline_pos + 1);
 	}
-	return (NULL);
+	else
+	{
+		line = ft_strdup(*newline);
+		temp = NULL;
+	}
+	return (check_line(&line, &temp, newline));
 }
 
 char	*get_next_line(int fd)
@@ -95,7 +91,7 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	buffer = (char *)malloc(BUFFER_SIZE + 1);
 	if (!buffer)
 		return (NULL);
 	if (!newline)
@@ -104,7 +100,7 @@ char	*get_next_line(int fd)
 		return (clean_line(&buffer));
 	newline = update_buffer(fd, buffer, &newline);
 	free(buffer);
-	if (!newline)
-		return (NULL);
+	if (!newline || *newline == '\0')
+		return (clean_line(&newline));
 	return (extract_newline(&newline));
 }
